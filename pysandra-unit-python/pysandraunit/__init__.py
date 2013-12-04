@@ -1,1 +1,1 @@
-import PysandraUnit, PysandraUnitServerError
+from pysandraunit import PysandraUnit, PysandraUnitServerError
