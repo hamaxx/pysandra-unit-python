@@ -1,0 +1,57 @@
+package com.zemanta.pysandra_unit;
+import java.io.IOException;
+import java.io.StringWriter;
+
+import org.json.simple.JSONObject;
+
+
+abstract class JsonRpcResponse {
+	
+	public final String STATUS_OK = "ok";
+	public final String STATUS_ERROR = "error";
+	
+	protected String status;
+	private String response;
+	
+	public JsonRpcResponse(String response) {
+		this.response = response;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public String toJSON() throws IOException {
+		JSONObject obj = new JSONObject();
+		obj.put("status", this.status);
+		obj.put("value", this.response);
+
+		StringWriter out = new StringWriter();
+		obj.writeJSONString(out);
+		return out.toString();
+	}
+	
+	public void send() throws IOException {
+		System.out.println(toJSON());
+	}
+}
+
+class JsonRpcOkResponse extends JsonRpcResponse {
+
+	public JsonRpcOkResponse(String response) {
+		super(response);
+		this.status = this.STATUS_OK;
+	}
+	
+	public JsonRpcOkResponse() {
+		super("");
+		this.status = this.STATUS_OK;
+	}
+	
+}
+
+class JsonRpcErrorResponse extends JsonRpcResponse {
+
+	public JsonRpcErrorResponse(String response) {
+		super(response);
+		this.status = this.STATUS_ERROR;
+	}
+	
+}

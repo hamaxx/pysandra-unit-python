@@ -1,0 +1,45 @@
+package com.zemanta.pysandra_unit;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
+
+public class PysandraUnit {
+		
+	private static JsonRpcResponse executeCommand(JsonRpcRequest request) throws Exception {
+		try {
+			return (JsonRpcResponse) CassandraProcedures.run(request.getCommand(), request.getParam());
+		} catch (Exception e) {
+			return new JsonRpcErrorResponse(e.toString());
+		}
+	}
+	
+	private static void parseRequest(String jstring) throws Exception {
+		JsonRpcResponse response = null;
+		try {
+			JsonRpcRequest request = new JsonRpcRequest(jstring);
+			response = executeCommand(request);		
+		} catch (JsonRpcRequestException e) {
+			response = new JsonRpcErrorResponse(e.toString());
+		}
+		response.send();
+	}
+
+	private static void inputReader() throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String input;
+		while((input=br.readLine()) != null) {
+			parseRequest(input);
+		}
+	}
+
+	public static void main(String[] args) throws Exception {
+		Logger.getRootLogger().setLevel(Level.OFF);
+		
+		inputReader();
+		
+		System.exit(0); // Without calling exit Cassandra daemon doesnt't exit
+	}
+}

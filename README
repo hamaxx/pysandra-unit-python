@@ -1,0 +1,4 @@
+
+pysandra-unit is an Eclipse Maven project.
+
+To build it import it to eclipse en run Maven build
