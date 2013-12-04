@@ -14,8 +14,16 @@ Building it is as simple as:
 
 ###Using pysandra-unit-python:
 
+Install:
+
+    pip install pysandra-unit
+
+    or
+
     python pysandra-unit-python/setup.py install
 
+
+Run:
 
     from pysandraunit import PysandraUnit
 
