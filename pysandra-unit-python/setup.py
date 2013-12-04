@@ -8,5 +8,9 @@ setup(name='pysandra-unit',
       description="Python wrapper for cassandra-unit.",
       url='https://github.com/Zemanta/pysandra-unit',
       packages=['pysandraunit',],
+      package_data={
+        'pysandraunit': ['jar/pysandra-unit.jar'],
+      },
+      include_package_data=True,
       platforms='any',
       zip_safe=True)
