@@ -14,6 +14,9 @@ Building it is as simple as:
 
 ###Using pysandra-unit-python:
 
+    python pysandra-unit-python/setup.py install
+
+
     from pysandraunit import PysandraUnit
 
     pysandra_unit = PysandraUnit('path_to_cassandra_schema.yaml[1]')
@@ -23,8 +26,3 @@ Building it is as simple as:
 
 [1] Docs for schema yaml: https://github.com/jsevellec/cassandra-unit/wiki/How-to-create-a-yaml-dataset
 
-###TODO
-
-python setup.py
-
-tests
