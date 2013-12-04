@@ -22,3 +22,9 @@ Building it is as simple as:
     pysandra_unit.clean() # Cleans data and reload schema
 
 [1] Docs for schema yaml: https://github.com/jsevellec/cassandra-unit/wiki/How-to-create-a-yaml-dataset
+
+###TODO
+
+python setup.py
+
+tests
