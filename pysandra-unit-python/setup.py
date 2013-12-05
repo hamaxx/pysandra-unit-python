@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='pysandra-unit',
-      version='0.1',
+      version='0.2',
       author='Jure Ham',
       license='GPLv3',
       author_email='jure.ham@zemanta.com',

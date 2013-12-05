@@ -16,21 +16,17 @@ class CassandraTestCaseConfigException(Exception):
 class CassandraTestCase(TestCase):
 
 	def _init_cassandra(self):
-		global _pysandra_single, _cassandra_server_list
+		if not hasattr(settings, 'PYSANDRA_SCHEMA_FILE_PATH') or not settings.PYSANDRA_SCHEMA_FILE_PATH:
+			raise CassandraTestCaseConfigException('Missing PYSANDRA_SCHEMA_FILE_PATH setting')
 
-		if not _pysandra_single:
-			if not hasattr(settings, 'PYSANDRA_SCHEMA_FILE_PATH') or not settings.PYSANDRA_SCHEMA_FILE_PATH:
-				raise CassandraTestCaseConfigException('Missing PYSANDRA_SCHEMA_FILE_PATH setting')
+		schema_path = settings.PYSANDRA_SCHEMA_FILE_PATH
 
-			schema_path = settings.PYSANDRA_SCHEMA_FILE_PATH
+		if not os.path.exists(schema_path):
+			raise CassandraTestCaseConfigException('File %s doesn\'t exist' % schema_path)
 
-			if not os.path.exists(schema_path):
-				raise CassandraTestCaseConfigException('File %s doesn\'t exist' % schema_path)
+		_pysandra_single = PysandraUnit(schema_path)
+		return _pysandra_single.start()
 
-			_pysandra_single = PysandraUnit(schema_path)
-			_cassandra_server_list = _pysandra_single.start()
-
-		self.cassandra_server_list = _cassandra_server_list
 
 	def _start_cassandra(self):
 		global _pysandra_single, _cassandra_server_list
