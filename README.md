@@ -34,6 +34,12 @@ Run in Python:
 
 Django Test Case:
 
+settings.py:
+
+	PYSANDRA_SCHEMA_FILE_PATH = 'path_to_schema.yaml[1]'
+
+tests.py:
+
 	from pysandraunit import CassandraTestCase
 
 	class SimpleTest(CassandraTestCase):
@@ -42,6 +48,7 @@ Django Test Case:
 			test_cassandra_server_list = self.cassandra_server_list
 			...
 
+CassandraTestCase will drop data and reload schema for every test case.
 
 [1] Docs for schema yaml: https://github.com/jsevellec/cassandra-unit/wiki/How-to-create-a-yaml-dataset
 
