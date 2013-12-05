@@ -51,6 +51,9 @@ class PysandraUnit(object):
 		return [server]
 
 	def clean(self):
+		if not self._server:
+			raise PysandraUnitServerError('Server has not been started')
+
 		self._run_command(_PYSANDRA_COMMAND_CLEAN_DATA)
 		self._run_command(_PYSANDRA_COMMAND_LOAD_DATA, self._dataset_path)
 

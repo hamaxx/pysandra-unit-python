@@ -9,7 +9,7 @@ setup(name='pysandra-unit',
       url='https://github.com/Zemanta/pysandra-unit',
       packages=['pysandraunit',],
       package_data={
-        'pysandraunit': ['jar/pysandra-unit.jar'],
+        'pysandraunit': ['jar/pysandra-unit.jar', 'pysandraunit_django/*.py'],
       },
       include_package_data=True,
       platforms='any',

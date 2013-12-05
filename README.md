@@ -23,7 +23,7 @@ Install:
     python pysandra-unit-python/setup.py install
 
 
-Run:
+Run in Python:
 
     from pysandraunit import PysandraUnit
 
@@ -31,6 +31,17 @@ Run:
 
     pysandra_unit.start() # Starts cassandra server and loads schema
     pysandra_unit.clean() # Cleans data and reload schema
+
+Django Test Case:
+
+	from pysandraunit import CassandraTestCase
+
+	class SimpleTest(CassandraTestCase):
+
+		def setUp(self):
+			test_cassandra_server_list = self.cassandra_server_list
+			...
+
 
 [1] Docs for schema yaml: https://github.com/jsevellec/cassandra-unit/wiki/How-to-create-a-yaml-dataset
 
