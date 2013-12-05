@@ -1,20 +1,10 @@
 ##Pysandra Unit
 
-Python wrapper for [cassandra-unit](https://github.com/jsevellec/cassandra-unit)
+Python wrapper for [cassandra-unit](https://github.com/jsevellec/cassandra-unit).
 
-###Build pysandra-unit jar:
+Pyssandra Unit helps you write isolated unittests in Django and other python applications.
 
-pysandra-unit is a Maven project.
-
-Building it is as simple as:
-
-    cd pysandra-unit
-    mvn package
-
-
-###Using pysandra-unit-python:
-
-Install:
+###Install:
 
     pip install pysandra-unit
 
@@ -23,7 +13,7 @@ Install:
     python pysandra-unit-python/setup.py install
 
 
-Run in Python:
+###Run in Python:
 
     from pysandraunit import PysandraUnit
 
@@ -32,7 +22,7 @@ Run in Python:
     pysandra_unit.start() # Starts cassandra server and loads schema
     pysandra_unit.clean() # Cleans data and reload schema
 
-Django Test Case:
+###Django Test Case:
 
 settings.py:
 
@@ -51,4 +41,14 @@ tests.py:
 CassandraTestCase will drop data and reload schema for every test case.
 
 [1] Docs for schema yaml: https://github.com/jsevellec/cassandra-unit/wiki/How-to-create-a-yaml-dataset
+
+###Build pysandra-unit jar:
+
+pysandra-unit is a Maven project.
+
+Building it is as simple as:
+
+    cd pysandra-unit
+    mvn package
+
 
