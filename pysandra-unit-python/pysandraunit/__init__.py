@@ -1,7 +1,6 @@
+import os
+
 from pysandraunit import PysandraUnit, PysandraUnitServerError
 
-try:
-	import django
+if os.environ.get('DJANGO_SETTINGS_MODULE'):
 	from pysandraunit_django.testcase import CassandraTestCase, CassandraTestCaseConfigException
-except Exception:
-	pass # If django is not installed, we don't want to load django helpers

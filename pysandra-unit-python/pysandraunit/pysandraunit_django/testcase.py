@@ -1,7 +1,7 @@
 import os
 
-from django.test import TestCase
 from django.conf import settings
+from django.test import TestCase
 
 from pysandraunit import PysandraUnit
 
@@ -16,6 +16,8 @@ class CassandraTestCaseConfigException(Exception):
 class CassandraTestCase(TestCase):
 
 	def _init_cassandra(self):
+		global _pysandra_single
+
 		if not hasattr(settings, 'PYSANDRA_SCHEMA_FILE_PATH') or not settings.PYSANDRA_SCHEMA_FILE_PATH:
 			raise CassandraTestCaseConfigException('Missing PYSANDRA_SCHEMA_FILE_PATH setting')
 
@@ -45,7 +47,7 @@ class CassandraTestCase(TestCase):
 	def _pre_setup(self):
 		super(CassandraTestCase, self)._pre_setup()
 
-		self._init_cassandra()
+		self._start_cassandra()
 
 	def _post_teardown(self):
 		super(CassandraTestCase, self)._post_teardown()

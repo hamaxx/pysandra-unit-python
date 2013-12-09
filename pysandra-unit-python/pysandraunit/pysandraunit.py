@@ -22,7 +22,7 @@ class PysandraUnit(object):
 		self._dataset_path = dataset_path
 
 	def _run_pysandra(self):
-		self._server = subprocess.Popen(["java", "-jar", _PYSANDRA_JAR_PATH], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+		self._server = subprocess.Popen(["java", "-jar", _PYSANDRA_JAR_PATH], stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
 
 	def _run_command(self, command, param=''):
 		msg = {
