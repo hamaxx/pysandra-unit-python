@@ -11,6 +11,9 @@ setup(name='pysandra-unit',
       package_data={
         'pysandraunit': ['jar/pysandra-unit.jar', 'pysandraunit_django/*.py'],
       },
+      install_requires=[
+        'pyyaml',
+      ],
       include_package_data=True,
       platforms='any',
       zip_safe=True)

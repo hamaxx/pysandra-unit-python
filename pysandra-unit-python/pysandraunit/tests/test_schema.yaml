@@ -1,0 +1,24 @@
+name: ratel
+replicationFactor: 1
+strategy: org.apache.cassandra.locator.SimpleStrategy
+
+columnFamilies:
+- name: ascii
+  comparatorType: AsciiType
+  defaultColumnValueType: AsciiType
+  keyType: IntegerType
+
+- name: ascii_counter
+  comparatorType: AsciiType
+  defaultColumnValueType: CounterColumnType
+  keyType: AsciiType
+
+- name: ascii_counter_reversed
+  comparatorType: AsciiType(reversed=true)
+  defaultColumnValueType: CounterColumnType
+  keyType: AsciiType
+
+- name: composite
+  comparatorType: CompositeType(IntegerType,IntegerType)
+  defaultColumnValueType: CounterColumnType
+  keyType: AsciiType

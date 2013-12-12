@@ -1,15 +1,28 @@
 import subprocess
 import os
 import json
+import yaml
+import shutil
 
 _here = lambda x: os.path.join(os.path.dirname(os.path.abspath(__file__)), x)
 
-_PYSANDRA_COMMAND_START = 'start'
-_PYSANDRA_COMMAND_STOP = 'stop'
-_PYSANDRA_COMMAND_LOAD_DATA = 'load'
-_PYSANDRA_COMMAND_CLEAN_DATA = 'clean'
+_COMMAND_START = 'start'
+_COMMAND_STOP = 'stop'
+_COMMAND_LOAD_DATA = 'load'
+_COMMAND_CLEAN_DATA = 'clean'
 
-_PYSANDRA_JAR_PATH = _here('jar/pysandra-unit.jar')
+_TMP_PATHS = ['/dev/shm/', '/tmp/', './']
+_TMP_DIR = 'pysandraunittarget/'
+
+_JAR_PATH = _here('jar/pysandra-unit.jar')
+_DEFAULT_YAML_PATH = _here('resources/cu-cassandra.yaml')
+
+_CASSANDRA_YAML_REL_PATH = 'cassandra.yaml'
+_CASSANDRA_DIR_OPTIONS = {
+	'commitlog_directory': 'embeddedCassandra/commitlog',
+	'saved_caches_directory': 'embeddedCassandra/saved_caches',
+	'data_file_directories': ['embeddedCassandra/data'],
+}
 
 
 class PysandraUnitServerError(Exception): pass
@@ -19,11 +32,64 @@ class PysandraUnit(object):
 	_dataset_path = None
 	_server = None
 
-	def __init__(self, dataset_path):
+	tmp_dir = None
+	cassandra_yaml = None
+
+	def __init__(self, dataset_path=None, tmp_dir=None, cassandra_yaml_path=None, cassandra_yaml_options=None):
 		self._dataset_path = dataset_path
 
+		if tmp_dir:
+			self.tmp_dir = tmp_dir
+		else:
+			self.tmp_dir = self._find_tmp_dir()
+		self._create_tmp_dir()
+
+		self.cassandra_yaml = self._get_yaml_file(cassandra_yaml_path, cassandra_yaml_options)
+
+	def _create_tmp_dir(self):
+		if os.path.exists(self.tmp_dir):
+			shutil.rmtree(self.tmp_dir)
+		os.makedirs(self.tmp_dir, 0o755)
+
+	def _find_tmp_dir(self):
+		for path in _TMP_PATHS:
+			if not os.path.exists(path):
+				continue
+			if not os.path.isdir(path):
+				continue
+			if not os.access(path, os.W_OK):
+				continue
+
+			full_path = os.path.join(path, _TMP_DIR)
+			return full_path
+
+		return None
+
+	def _get_yaml_file(self, yaml_path, yaml_options):
+		if not yaml_path:
+			yaml_path = _DEFAULT_YAML_PATH
+
+		config = yaml.load(open(yaml_path, 'r'))
+
+		for opt, c_dirs in _CASSANDRA_DIR_OPTIONS.iteritems():
+			if isinstance(c_dirs, list):
+				config[opt] = [os.path.join(self.tmp_dir, c_dir) for c_dir in c_dirs]
+			else:
+				config[opt] = os.path.join(self.tmp_dir, c_dirs)
+
+		if yaml_options:
+			for k, v in yaml_options:
+				config[k] = v
+
+		new_yaml_path = os.path.join(self.tmp_dir, _CASSANDRA_YAML_REL_PATH)
+
+		with open(new_yaml_path, 'w') as fw:
+			fw.write(yaml.dump(config, default_flow_style=False))
+
+		return new_yaml_path
+
 	def _run_pysandra(self):
-		self._server = subprocess.Popen(["java", "-jar", _PYSANDRA_JAR_PATH], stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+		self._server = subprocess.Popen(["java", "-jar", _JAR_PATH], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
 
 	def _get_command_message(self, msg):
 		return '%s\n' % json.dumps(msg)
@@ -56,20 +122,25 @@ class PysandraUnit(object):
 	def start(self):
 		self._run_pysandra()
 
-		server = self._run_command(_PYSANDRA_COMMAND_START)
-		self._run_command(_PYSANDRA_COMMAND_LOAD_DATA, {
-			'filename': self._dataset_path
+		server = self._run_command(_COMMAND_START, {
+			'tmpdir': self.tmp_dir,
+			'yamlconf': self.cassandra_yaml,
 		})
+
+		if self._dataset_path:
+			self._run_command(_COMMAND_LOAD_DATA, {
+				'filename': self._dataset_path
+			})
 
 		return [server]
 
 	def stop(self):
-		self._run_command(_PYSANDRA_COMMAND_STOP, join=True)
+		self._run_command(_COMMAND_STOP, join=True)
 		self._server = None
 
 	def clean(self):
-		self._run_command(_PYSANDRA_COMMAND_CLEAN_DATA)
-		self._run_command(_PYSANDRA_COMMAND_LOAD_DATA, {
+		self._run_command(_COMMAND_CLEAN_DATA)
+		self._run_command(_COMMAND_LOAD_DATA, {
 			'filename': self._dataset_path
 		})
 

@@ -1,4 +1,5 @@
 package com.zemanta.pysandra_unit;
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
@@ -36,8 +37,19 @@ public class CassandraProcedures {
 	}
 	
 	public static JsonRpcResponse start(JSONObject val) {
+		String tmpDir = (String)val.get("tmpdir");
+		if (tmpDir == null) {
+			return new JsonRpcErrorResponse("cassandra_start_error: Missing tmpdir");
+		}
+		
+		String yamlConf = (String)val.get("yamlconf");
+		if (yamlConf == null) {
+			return new JsonRpcErrorResponse("cassandra_start_error: Missing yamlconf");	
+		}
+		
 		try {
-			EmbeddedCassandraServerHelper.startEmbeddedCassandra();
+			File file = new File(yamlConf);
+			EmbeddedCassandraServerHelper.startEmbeddedCassandra(file, tmpDir);
 			return new JsonRpcOkResponse(CASSANDRA_HOST);
 		} catch (Exception ex) {
 			return new JsonRpcErrorResponse("cassandra_start_error " + ex);
