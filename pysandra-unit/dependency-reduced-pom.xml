@@ -4,7 +4,7 @@
   <groupId>com.zemanta</groupId>
   <artifactId>pysandra-unit</artifactId>
   <name>pysandra-unit</name>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.3</version>
   <url>https://github.com/Zemanta</url>
   <build>
     <plugins>

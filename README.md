@@ -21,6 +21,7 @@ Pyssandra Unit helps you write isolated unittests in Django and other python app
 
     pysandra_unit.start() # Starts cassandra server and loads schema
     pysandra_unit.clean() # Cleans data and reload schema
+    pysandra_unit.stop() # Sends a stop singnal and waits for server to die
 
 ###Django Test Case:
 

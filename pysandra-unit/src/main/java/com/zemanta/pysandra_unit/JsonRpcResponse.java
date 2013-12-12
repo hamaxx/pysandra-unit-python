@@ -28,8 +28,10 @@ abstract class JsonRpcResponse {
 		return out.toString();
 	}
 	
-	public void send() throws IOException {
+	public boolean send() throws IOException {
 		System.out.println(toJSON());
+		
+		return true;
 	}
 }
 
@@ -43,6 +45,15 @@ class JsonRpcOkResponse extends JsonRpcResponse {
 	public JsonRpcOkResponse() {
 		super("");
 		this.status = this.STATUS_OK;
+	}
+	
+}
+
+class JsonRpcOkStopResponse extends JsonRpcOkResponse {
+
+	public boolean send() throws IOException {
+		super.send();
+		return false;
 	}
 	
 }

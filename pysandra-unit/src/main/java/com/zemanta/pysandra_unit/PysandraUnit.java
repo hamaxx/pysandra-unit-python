@@ -16,22 +16,24 @@ public class PysandraUnit {
 		}
 	}
 	
-	private static void parseRequest(String jstring) throws Exception {
+	private static boolean parseRequest(String jstring) throws Exception {
 		JsonRpcResponse response = null;
 		try {
 			JsonRpcRequest request = new JsonRpcRequest(jstring);
-			response = executeCommand(request);		
+			response = executeCommand(request);
 		} catch (JsonRpcRequestException e) {
 			response = new JsonRpcErrorResponse(e.toString());
 		}
-		response.send();
+		return response.send();
 	}
 
 	private static void inputReader() throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String input;
 		while((input=br.readLine()) != null) {
-			parseRequest(input);
+			if (!parseRequest(input)) {
+				break;
+			}
 		}
 	}
 

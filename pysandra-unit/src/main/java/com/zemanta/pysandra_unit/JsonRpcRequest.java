@@ -6,13 +6,13 @@ import org.json.simple.JSONValue;
 public class JsonRpcRequest {
 
 	private String command;
-	private String param;
+	private JSONObject param;
 	
 	public JsonRpcRequest(String jstring) throws Exception {
 		try {
 			JSONObject obj = (JSONObject) JSONValue.parse(jstring);
 			command = (String) obj.get("command");
-			param = (String) obj.get("param");
+			param = (JSONObject) obj.get("param");
 		} catch (Exception e) {
 			throw new JsonRpcRequestException("Couldn't parse request json: " + e);
 		}
@@ -22,7 +22,7 @@ public class JsonRpcRequest {
 		}
 	}
 
-	public String getParam() {
+	public JSONObject getParam() {
 		return param;
 	}
 	

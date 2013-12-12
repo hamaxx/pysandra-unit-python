@@ -5,6 +5,7 @@ import json
 _here = lambda x: os.path.join(os.path.dirname(os.path.abspath(__file__)), x)
 
 _PYSANDRA_COMMAND_START = 'start'
+_PYSANDRA_COMMAND_STOP = 'stop'
 _PYSANDRA_COMMAND_LOAD_DATA = 'load'
 _PYSANDRA_COMMAND_CLEAN_DATA = 'clean'
 
@@ -24,7 +25,10 @@ class PysandraUnit(object):
 	def _run_pysandra(self):
 		self._server = subprocess.Popen(["java", "-jar", _PYSANDRA_JAR_PATH], stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
 
-	def _run_command(self, command, param=''):
+	def _run_command(self, command, param=None):
+		if not param:
+			param = {}
+
 		msg = {
 			'command': command,
 			'param': param,
@@ -46,9 +50,18 @@ class PysandraUnit(object):
 		self._run_pysandra()
 
 		server = self._run_command(_PYSANDRA_COMMAND_START)
-		self._run_command(_PYSANDRA_COMMAND_LOAD_DATA, self._dataset_path)
+		self._run_command(_PYSANDRA_COMMAND_LOAD_DATA, {
+			'filename': self._dataset_path
+		})
 
 		return [server]
+
+	def stop(self):
+		msg = {
+			'command': _PYSANDRA_COMMAND_STOP,
+			'param': {},
+		}
+		self._server.communicate('%s\n' % json.dumps(msg))
 
 	def clean(self):
 		if not self._server:

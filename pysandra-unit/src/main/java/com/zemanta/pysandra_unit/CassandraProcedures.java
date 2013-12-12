@@ -6,6 +6,7 @@ import java.util.List;
 import org.cassandraunit.DataLoader;
 import org.cassandraunit.dataset.yaml.FileYamlDataSet;
 import org.cassandraunit.utils.EmbeddedCassandraServerHelper;
+import org.json.simple.JSONObject;
 
 
 public class CassandraProcedures {
@@ -17,13 +18,13 @@ public class CassandraProcedures {
 		return validProcedures.contains(methodName);
 	}
 	
-	public static Object run(String methodName, String arg) throws CassandraProceduresException {
+	public static Object run(String methodName, JSONObject arg) throws CassandraProceduresException {
 		if (!hasMethod(methodName)) {
 			throw new CassandraProceduresException("Method doesn't exist: " + methodName);
 		}
 		
 		try {			
-			Method method = CassandraProcedures.class.getMethod(methodName, String.class);
+			Method method = CassandraProcedures.class.getMethod(methodName, JSONObject.class);
 			return (JsonRpcResponse) method.invoke(CassandraProcedures.class, arg);
 		} catch (SecurityException e) {
 		} catch (NoSuchMethodException e) {
@@ -34,7 +35,7 @@ public class CassandraProcedures {
 		throw new CassandraProceduresException("Method doesn't exist: " + methodName);
 	}
 	
-	public static JsonRpcResponse start(String val) {
+	public static JsonRpcResponse start(JSONObject val) {
 		try {
 			EmbeddedCassandraServerHelper.startEmbeddedCassandra();
 			return new JsonRpcOkResponse(CASSANDRA_HOST);
@@ -43,7 +44,12 @@ public class CassandraProcedures {
 		}
 	}
 	
-	public static JsonRpcResponse load(String fileName) {
+	public static JsonRpcResponse stop(JSONObject val) {
+		return new JsonRpcOkStopResponse();
+	}
+	
+	public static JsonRpcResponse load(JSONObject val) {
+		String fileName = (String)val.get("filename");
 		try {
 			DataLoader dataLoader = new DataLoader("TestCluster", CASSANDRA_HOST);
 			dataLoader.load(new FileYamlDataSet(fileName));
@@ -53,7 +59,7 @@ public class CassandraProcedures {
 		}
 	}
 	
-	public static JsonRpcResponse clean(String val) {
+	public static JsonRpcResponse clean(JSONObject val) {
 		try {
 			EmbeddedCassandraServerHelper.cleanEmbeddedCassandra();
 			return new JsonRpcOkResponse();
