@@ -25,18 +25,25 @@ class PysandraUnit(object):
 	def _run_pysandra(self):
 		self._server = subprocess.Popen(["java", "-jar", _PYSANDRA_JAR_PATH], stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
 
-	def _run_command(self, command, param=None):
-		if not param:
-			param = {}
+	def _get_command_message(self, msg):
+		return '%s\n' % json.dumps(msg)
+
+	def _run_command(self, command, param=None, join=False):
+		if not self._server or self._server.stdin.closed or self._server.stdout.closed:
+			raise PysandraUnitServerError('Pysandra server not running')
 
 		msg = {
 			'command': command,
-			'param': param,
+			'param': param or {},
 		}
-		self._server.stdin.write('%s\n' % json.dumps(msg))
+
+		if join:
+			response_str = self._server.communicate(self._get_command_message(msg))[0].strip()
+		else:
+			self._server.stdin.write(self._get_command_message(msg))
+			response_str = self._server.stdout.readline().strip()
 
 		try:
-			response_str = self._server.stdout.readline().strip()
 			response = json.loads(response_str)
 		except Exception:
 			raise PysandraUnitServerError('Invalid pysandra server response: %s' % response_str)
@@ -57,16 +64,12 @@ class PysandraUnit(object):
 		return [server]
 
 	def stop(self):
-		msg = {
-			'command': _PYSANDRA_COMMAND_STOP,
-			'param': {},
-		}
-		self._server.communicate('%s\n' % json.dumps(msg))
+		self._run_command(_PYSANDRA_COMMAND_STOP, join=True)
+		self._server = None
 
 	def clean(self):
-		if not self._server:
-			raise PysandraUnitServerError('Server has not been started')
-
 		self._run_command(_PYSANDRA_COMMAND_CLEAN_DATA)
-		self._run_command(_PYSANDRA_COMMAND_LOAD_DATA, self._dataset_path)
+		self._run_command(_PYSANDRA_COMMAND_LOAD_DATA, {
+			'filename': self._dataset_path
+		})
 
