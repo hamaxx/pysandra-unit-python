@@ -4,7 +4,9 @@ import json
 import yaml
 import shutil
 
+
 _here = lambda x: os.path.join(os.path.dirname(os.path.abspath(__file__)), x)
+
 
 _COMMAND_START = 'start'
 _COMMAND_STOP = 'stop'
@@ -35,6 +37,8 @@ class PysandraUnit(object):
 	_dataset_path = None
 	_server = None
 	_cassandra_yaml = None
+
+	_cassandra_running = False
 
 	tmp_dir = None
 
@@ -90,7 +94,7 @@ class PysandraUnit(object):
 		return new_yaml_path
 
 	def _run_pysandra(self):
-		self._server = subprocess.Popen(["java", "-jar", _JAR_PATH], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+		self._server = subprocess.Popen(["java", "-jar", _JAR_PATH], stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
 
 	def _get_command_message(self, msg):
 		return '%s\n' % json.dumps(msg)
@@ -109,6 +113,13 @@ class PysandraUnit(object):
 		else:
 			self._server.stdin.write(self._get_command_message(msg))
 			response_str = self._server.stdout.readline().strip()
+
+		if not response_str:
+			try:
+				error_msg = self._server.stderr.readline()
+			except ValueError:
+				error_msg = 'Unknown error'
+			raise PysandraUnitServerError('Failed to execute command %s: %s' % (command, error_msg))
 
 		try:
 			response = json.loads(response_str)
@@ -134,6 +145,9 @@ class PysandraUnit(object):
 		})
 
 	def start(self):
+		if self._cassandra_running:
+			raise PysandraUnitServerError('Cassandra server already running')
+
 		self._run_pysandra()
 
 		self._run_command(_COMMAND_START, {
@@ -144,13 +158,21 @@ class PysandraUnit(object):
 		if self._dataset_path:
 			self.load_data();
 
+		self._cassandra_running = True
+
 		return [self.get_cassandra_host()]
 
 	def stop(self):
-		self._run_command(_COMMAND_STOP, join=True)
+		if self._cassandra_running:
+			self._run_command(_COMMAND_STOP, join=True)
+
 		self._server = None
+		self._cassandra_running = False
 
 	def clean(self):
+		if not self._cassandra_running:
+			raise PysandraUnitServerError('Cassandra server not running')
+
 		self._run_command(_COMMAND_CLEAN_DATA)
 		if self._dataset_path:
 			self.load_data();

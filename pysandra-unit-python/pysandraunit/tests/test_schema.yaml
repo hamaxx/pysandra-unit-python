@@ -1,4 +1,4 @@
-name: ratel
+name: testks
 replicationFactor: 1
 strategy: org.apache.cassandra.locator.SimpleStrategy
 
