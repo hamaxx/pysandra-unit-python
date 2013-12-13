@@ -1,9 +1,17 @@
+"""
+	pysandra-unit
+	~~~~~
+
+	Python wrapper around cassandra-unit that helps you write isolated unittests in Django and other python applications.
+"""
+
 import subprocess
 import os
 import json
 import yaml
 import shutil
 
+__all__ = ['PysandraUnit', 'PysandraUnitServerError']
 
 _here = lambda x: os.path.join(os.path.dirname(os.path.abspath(__file__)), x)
 
