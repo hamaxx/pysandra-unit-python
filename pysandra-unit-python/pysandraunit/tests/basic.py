@@ -73,5 +73,7 @@ class BasicOperationsTest(unittest.TestCase):
 		self.assertRaises(PysandraUnitServerError, p1.start)
 		self.assertRaises(PysandraUnitServerError, p2.start)
 		p1.stop()
+
+		p2.start()
 		p2.stop()
 

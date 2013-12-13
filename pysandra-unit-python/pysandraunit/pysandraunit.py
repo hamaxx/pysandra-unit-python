@@ -43,6 +43,15 @@ class PysandraUnit(object):
 	tmp_dir = None
 
 	def __init__(self, dataset_path=None, tmp_dir=None, rpc_port=None, cassandra_yaml_options=None):
+		"""
+		Construct a PysandraUnit object. Java server won't be started yet
+
+		:param dataset_path: path to the dataset file in yaml format. Check cassandra-unit docs for details
+		:param tmp_dir: path to the directory where PysandraUnit and Cassandra should create temporary files
+		:param rpc_port: Cassandra rpc port
+		:prama cassandra_yaml_options: dict of additional options passed to Cassandra in cassandra.yaml file
+		"""
+
 		self._dataset_path = dataset_path
 
 		self.tmp_dir = tmp_dir or self._find_tmp_dir()
@@ -132,9 +141,20 @@ class PysandraUnit(object):
 		raise PysandraUnitServerError(response)
 
 	def get_cassandra_host(self):
+		"""
+		Returns Cassandra server host and rpc port in format: 'localhost:9710'
+		"""
+
 		return '%s:%s' % (_DEFAULT_RPC_HOST, self.rpc_port)
 
 	def load_data(self, dataset_path=None):
+		"""
+		Load schema into Cassandra from dataset file
+		If file isn't provided the one from constructior will be used
+
+		:param dataset_path: path to the dataset file in yaml format. Check cassandra-unit docs for details
+		"""
+
 		dataset_path = dataset_path or self._dataset_path
 		if not dataset_path:
 			raise PysandraUnitServerError('Can\'t load data. No dataset specified.')
@@ -145,6 +165,11 @@ class PysandraUnit(object):
 		})
 
 	def start(self):
+		"""
+		Start Pysandra and Cassandra server, loads dataset file if provided in the constructor
+		If server is already running, 'PysandraUnitServerError' exception will be raised
+		"""
+
 		if self._cassandra_running:
 			raise PysandraUnitServerError('Cassandra server already running')
 
@@ -163,6 +188,10 @@ class PysandraUnit(object):
 		return [self.get_cassandra_host()]
 
 	def stop(self):
+		"""
+		Stop Pysandra and Cassandra server if running
+		"""
+
 		if self._cassandra_running:
 			self._run_command(_COMMAND_STOP, join=True)
 
@@ -170,6 +199,11 @@ class PysandraUnit(object):
 		self._cassandra_running = False
 
 	def clean(self):
+		"""
+		Cleans all Cassandra Keyspaces and reloads data if dataset is provided in constructor
+		If server is not running, 'PysandraUnitServerError' exception will be raised
+		"""
+
 		if not self._cassandra_running:
 			raise PysandraUnitServerError('Cassandra server not running')
 

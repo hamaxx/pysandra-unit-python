@@ -14,6 +14,9 @@ class CassandraTestCaseConfigException(Exception):
 	pass
 
 class CassandraTestCase(TestCase):
+	"""
+	Django TestCase which starts Cassandra server on the first setUp and reloads data for every test case
+	"""
 
 	def _init_cassandra(self):
 		global _pysandra_single
