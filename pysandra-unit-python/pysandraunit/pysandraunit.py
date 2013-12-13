@@ -11,6 +11,9 @@ _COMMAND_STOP = 'stop'
 _COMMAND_LOAD_DATA = 'load'
 _COMMAND_CLEAN_DATA = 'clean'
 
+_DEFAULT_RPC_HOST = 'localhost'
+_DEFAULT_RPC_PORT = 9171
+
 _TMP_PATHS = ['/dev/shm/', '/tmp/', './']
 _TMP_DIR = 'pysandraunittarget/'
 
@@ -31,20 +34,19 @@ class PysandraUnit(object):
 
 	_dataset_path = None
 	_server = None
+	_cassandra_yaml = None
 
 	tmp_dir = None
-	cassandra_yaml = None
 
-	def __init__(self, dataset_path=None, tmp_dir=None, cassandra_yaml_path=None, cassandra_yaml_options=None):
+	def __init__(self, dataset_path=None, tmp_dir=None, rpc_port=None, cassandra_yaml_options=None):
 		self._dataset_path = dataset_path
 
-		if tmp_dir:
-			self.tmp_dir = tmp_dir
-		else:
-			self.tmp_dir = self._find_tmp_dir()
+		self.tmp_dir = tmp_dir or self._find_tmp_dir()
 		self._create_tmp_dir()
 
-		self.cassandra_yaml = self._get_yaml_file(cassandra_yaml_path, cassandra_yaml_options)
+		self.rpc_port = rpc_port or _DEFAULT_RPC_PORT
+
+		self._cassandra_yaml = self._get_yaml_file(cassandra_yaml_options)
 
 	def _create_tmp_dir(self):
 		if os.path.exists(self.tmp_dir):
@@ -65,17 +67,16 @@ class PysandraUnit(object):
 
 		return None
 
-	def _get_yaml_file(self, yaml_path, yaml_options):
-		if not yaml_path:
-			yaml_path = _DEFAULT_YAML_PATH
-
-		config = yaml.load(open(yaml_path, 'r'))
+	def _get_yaml_file(self, yaml_options):
+		config = yaml.load(open(_DEFAULT_YAML_PATH, 'r'))
 
 		for opt, c_dirs in _CASSANDRA_DIR_OPTIONS.iteritems():
 			if isinstance(c_dirs, list):
 				config[opt] = [os.path.join(self.tmp_dir, c_dir) for c_dir in c_dirs]
 			else:
 				config[opt] = os.path.join(self.tmp_dir, c_dirs)
+
+		config['rpc_port'] = self.rpc_port
 
 		if yaml_options:
 			for k, v in yaml_options:
@@ -119,20 +120,31 @@ class PysandraUnit(object):
 
 		raise PysandraUnitServerError(response)
 
+	def get_cassandra_host(self):
+		return '%s:%s' % (_DEFAULT_RPC_HOST, self.rpc_port)
+
+	def load_data(self, dataset_path=None):
+		dataset_path = dataset_path or self._dataset_path
+		if not dataset_path:
+			raise PysandraUnitServerError('Can\'t load data. No dataset specified.')
+
+		self._run_command(_COMMAND_LOAD_DATA, {
+			'filename': self._dataset_path,
+			'host': self.get_cassandra_host(),
+		})
+
 	def start(self):
 		self._run_pysandra()
 
-		server = self._run_command(_COMMAND_START, {
+		self._run_command(_COMMAND_START, {
 			'tmpdir': self.tmp_dir,
-			'yamlconf': self.cassandra_yaml,
+			'yamlconf': self._cassandra_yaml,
 		})
 
 		if self._dataset_path:
-			self._run_command(_COMMAND_LOAD_DATA, {
-				'filename': self._dataset_path
-			})
+			self.load_data();
 
-		return [server]
+		return [self.get_cassandra_host()]
 
 	def stop(self):
 		self._run_command(_COMMAND_STOP, join=True)
@@ -140,7 +152,5 @@ class PysandraUnit(object):
 
 	def clean(self):
 		self._run_command(_COMMAND_CLEAN_DATA)
-		self._run_command(_COMMAND_LOAD_DATA, {
-			'filename': self._dataset_path
-		})
-
+		if self._dataset_path:
+			self.load_data();

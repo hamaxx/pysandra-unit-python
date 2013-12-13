@@ -11,8 +11,6 @@ import org.json.simple.JSONObject;
 
 
 public class CassandraProcedures {
-	public static final String CASSANDRA_HOST = "localhost:9171";
-	
 	public static List<String> validProcedures = Arrays.asList(new String[] {"start", "stop", "clean", "load"});
 	
 	private static boolean hasMethod(String methodName) {
@@ -50,7 +48,7 @@ public class CassandraProcedures {
 		try {
 			File file = new File(yamlConf);
 			EmbeddedCassandraServerHelper.startEmbeddedCassandra(file, tmpDir);
-			return new JsonRpcOkResponse(CASSANDRA_HOST);
+			return new JsonRpcOkResponse();
 		} catch (Exception ex) {
 			return new JsonRpcErrorResponse("cassandra_start_error " + ex);
 		}
@@ -62,8 +60,14 @@ public class CassandraProcedures {
 	
 	public static JsonRpcResponse load(JSONObject val) {
 		String fileName = (String)val.get("filename");
+		String host = (String)val.get("host");
+		
+		if (host == null) {
+			return new JsonRpcErrorResponse("load_data_error: Missing host");
+		}
+		
 		try {
-			DataLoader dataLoader = new DataLoader("TestCluster", CASSANDRA_HOST);
+			DataLoader dataLoader = new DataLoader("TestCluster", host);
 			dataLoader.load(new FileYamlDataSet(fileName));
 			return new JsonRpcOkResponse();
 		} catch (Exception ex) {
