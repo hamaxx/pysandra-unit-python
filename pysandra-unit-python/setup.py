@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='pysandra-unit',
-      version='0.2.1',
+      version='0.3',
       author='Jure Ham',
       license='GPLv3',
       author_email='jure.ham@zemanta.com',
@@ -9,7 +9,7 @@ setup(name='pysandra-unit',
       url='https://github.com/Zemanta/pysandra-unit',
       packages=['pysandraunit',],
       package_data={
-        'pysandraunit': ['jar/pysandra-unit.jar', 'pysandraunit_django/*.py'],
+        'pysandraunit': ['jar/pysandra-unit.jar', 'resources/cu-cassandra.yaml', 'pysandraunit_django/*.py'],
       },
       install_requires=[
         'pyyaml',
