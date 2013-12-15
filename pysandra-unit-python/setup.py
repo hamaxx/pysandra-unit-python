@@ -11,7 +11,7 @@ setup(name='pysandra-unit',
       url='https://github.com/Zemanta/pysandra-unit',
       packages=['pysandraunit',],
       package_data={
-        'pysandraunit': ['jar/pysandra-unit.jar', 'resources/cu-cassandra.yaml', 'pysandraunit_django/*.py'],
+        'pysandraunit': ['jar/pysandra-unit.jar', 'resources/cu-cassandra.yaml', 'django/*.py'],
       },
       install_requires=[
         'pyyaml',

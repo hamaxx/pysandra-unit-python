@@ -1,13 +1,11 @@
-import os
-
-from django.conf import settings
-from django.test import TestCase
-
 from pysandraunit import PysandraUnit
 
+from django.test import TestCase
+from django.conf import settings
 
 _pysandra_single = None
 _cassandra_server_list = None
+
 
 
 class CassandraTestCaseConfigException(Exception):
@@ -21,15 +19,13 @@ class CassandraTestCase(TestCase):
 	def _init_cassandra(self):
 		global _pysandra_single
 
-		if not hasattr(settings, 'PYSANDRA_SCHEMA_FILE_PATH') or not settings.PYSANDRA_SCHEMA_FILE_PATH:
-			raise CassandraTestCaseConfigException('Missing PYSANDRA_SCHEMA_FILE_PATH setting')
+		schema_path = getattr(settings, 'PYSANDRA_SCHEMA_FILE_PATH', None)
+		tmp_dir = getattr(settings, 'PYSANDRA_TMP_DIR', None)
+		rpc_port = getattr(settings, 'PYSANDRA_RPC_PORT', None)
+		cassandra_yaml_options = getattr(settings, 'PYSANDRA_CASSANDRA_YAML_OPTIONS', None)
 
-		schema_path = settings.PYSANDRA_SCHEMA_FILE_PATH
+		_pysandra_single = PysandraUnit(schema_path, tmp_dir, rpc_port, cassandra_yaml_options)
 
-		if not os.path.exists(schema_path):
-			raise CassandraTestCaseConfigException('File %s doesn\'t exist' % schema_path)
-
-		_pysandra_single = PysandraUnit(schema_path)
 		return _pysandra_single.start()
 
 

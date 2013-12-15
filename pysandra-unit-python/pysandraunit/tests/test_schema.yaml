@@ -6,7 +6,7 @@ columnFamilies:
 - name: ascii
   comparatorType: AsciiType
   defaultColumnValueType: AsciiType
-  keyType: IntegerType
+  keyType: AsciiType
 
 - name: ascii_counter
   comparatorType: AsciiType

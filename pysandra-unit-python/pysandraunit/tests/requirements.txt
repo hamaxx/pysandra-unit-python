@@ -1,0 +1,2 @@
+pycassa=1.9.1
+django=1.6.1
