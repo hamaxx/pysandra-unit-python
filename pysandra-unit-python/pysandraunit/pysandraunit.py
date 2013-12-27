@@ -169,7 +169,9 @@ class PysandraUnit(object):
 
 		self._run_command(_COMMAND_LOAD_DATA, {
 			'filename': self._dataset_path,
-			'host': self.get_cassandra_host(),
+			'type': 'yaml',
+			'host': _DEFAULT_RPC_HOST,
+			'port': self.rpc_port,
 		})
 
 	def start(self):

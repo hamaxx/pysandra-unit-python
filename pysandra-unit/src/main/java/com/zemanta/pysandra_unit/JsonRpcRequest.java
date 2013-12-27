@@ -8,7 +8,7 @@ public class JsonRpcRequest {
 	private String command;
 	private JSONObject param;
 	
-	public JsonRpcRequest(String jstring) throws Exception {
+	public JsonRpcRequest(String jstring) throws JsonRpcRequestException {
 		try {
 			JSONObject obj = (JSONObject) JSONValue.parse(jstring);
 			command = (String) obj.get("command");
@@ -19,6 +19,9 @@ public class JsonRpcRequest {
 		
 		if (command == null) {
 			throw new JsonRpcRequestException("Missing field command");
+		}
+		if (param == null) {
+			throw new JsonRpcRequestException("Missing field param");
 		}
 	}
 

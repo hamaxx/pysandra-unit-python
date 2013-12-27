@@ -4,7 +4,11 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
+import org.cassandraunit.CQLDataLoader;
 import org.cassandraunit.DataLoader;
+import org.cassandraunit.dataset.cql.FileCQLDataSet;
+import org.cassandraunit.dataset.json.FileJsonDataSet;
+import org.cassandraunit.dataset.xml.FileXmlDataSet;
 import org.cassandraunit.dataset.yaml.FileYamlDataSet;
 import org.cassandraunit.utils.EmbeddedCassandraServerHelper;
 import org.json.simple.JSONObject;
@@ -22,13 +26,13 @@ public class CassandraProcedures {
 			throw new CassandraProceduresException("Method doesn't exist: " + methodName);
 		}
 		
-		try {			
+		try {
 			Method method = CassandraProcedures.class.getMethod(methodName, JSONObject.class);
 			return (JsonRpcResponse) method.invoke(CassandraProcedures.class, arg);
 		} catch (SecurityException e) {
 		} catch (NoSuchMethodException e) {
 		} catch (Exception e) {
-			return new CassandraProceduresException("Runtime error: " + e);
+			throw new CassandraProceduresException("Runtime error: " + e.getCause());
 		}
 		
 		throw new CassandraProceduresException("Method doesn't exist: " + methodName);
@@ -60,18 +64,34 @@ public class CassandraProcedures {
 	
 	public static JsonRpcResponse load(JSONObject val) {
 		String fileName = (String)val.get("filename");
-		String host = (String)val.get("host");
 		
-		if (host == null) {
-			return new JsonRpcErrorResponse("load_data_error: Missing host");
+		String type = (String)val.get("type");
+		
+		String host = (String)val.get("host");
+		int port = (int)(long)(Long)val.get("port");
+		
+		if (host == null || fileName == null || type == null) {
+			return new JsonRpcErrorResponse("load_data_error: Missing attribute");
 		}
 		
+		String hostPort = host + ":" + port;
+		
 		try {
-			DataLoader dataLoader = new DataLoader("TestCluster", host);
-			dataLoader.load(new FileYamlDataSet(fileName));
+			if (type.equals("yaml")) {
+				new DataLoader("TestCluster", hostPort).load(new FileYamlDataSet(fileName));
+			} else if (type.equals("xml")) {
+				new DataLoader("TestCluster", hostPort).load(new FileXmlDataSet(fileName));
+			} else if (type.equals("json")) {
+				new DataLoader("TestCluster", hostPort).load(new FileJsonDataSet(fileName));
+			} else if (type.equals("cql3")) {
+				new CQLDataLoader(host, port).load(new FileCQLDataSet(fileName));
+			} else {
+				throw new Exception("Invalid type");
+			}
+			
 			return new JsonRpcOkResponse();
 		} catch (Exception ex) {
-			return new JsonRpcErrorResponse("load_data_error " + ex + " " + fileName);
+			return new JsonRpcErrorResponse("load_data_error: " + ex);
 		}
 	}
 	
