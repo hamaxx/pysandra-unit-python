@@ -1,5 +1,5 @@
 CREATE KEYSPACE testks
- WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 } ;
+ WITH REPLICATION = { 'class' : 'NetworkTopologyStrategy', 'datacenter1' : 1} ;
 
 USE testks ;
 

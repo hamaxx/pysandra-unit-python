@@ -2,6 +2,8 @@ import os
 
 import unittest
 
+import pycassa
+
 from ..pysandraunit import PysandraUnit, PysandraUnitServerError
 from utils import CassandraPool
 
@@ -67,5 +69,16 @@ class BasicOperationsTest(unittest.TestCase):
 
 		cp = CassandraPool('testks', [host])
 		cp.cf_connect('ascii')
+
+		p.stop()
+
+	def test_local_quorum(self):
+		p = PysandraUnit(self.test_schema_cql)
+		servers = p.start()
+
+		cp = CassandraPool('testks', servers)
+		cf = cp.cf_connect('ascii')
+
+		self.assertRaises(pycassa.NotFoundException, cf.get, 'test_key', read_consistency_level=pycassa.ConsistencyLevel.LOCAL_QUORUM)
 
 		p.stop()
