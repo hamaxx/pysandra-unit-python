@@ -9,9 +9,9 @@ setup(name='pysandra-unit',
       author_email='jure.ham@zemanta.com',
       description="Python wrapper for cassandra-unit.",
       url='https://github.com/Zemanta/pysandra-unit',
-      packages=['pysandraunit',],
+      packages=['pysandraunit', 'pysandraunit.django',],
       package_data={
-        'pysandraunit': ['jar/pysandra-unit.jar', 'resources/cu-cassandra.yaml', 'django/*.py'],
+        'pysandraunit': ['jar/pysandra-unit.jar', 'resources/cu-cassandra.yaml'],
       },
       install_requires=[
         'pyyaml',

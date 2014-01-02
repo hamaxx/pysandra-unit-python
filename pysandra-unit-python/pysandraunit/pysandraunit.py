@@ -10,11 +10,11 @@ import os
 import json
 import yaml
 import shutil
+import pkg_resources
 
 __all__ = ['PysandraUnit', 'PysandraUnitServerError']
 
-_here = lambda x: os.path.join(os.path.dirname(os.path.abspath(__file__)), x)
-
+_here = lambda x: pkg_resources.resource_filename('pysandraunit', x)
 
 _COMMAND_START = 'start'
 _COMMAND_STOP = 'stop'
