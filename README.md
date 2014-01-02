@@ -18,7 +18,7 @@ Pysandra Unit is a Python wrapper around [cassandra-unit](https://github.com/jse
 
     from pysandraunit import PysandraUnit
 
-    pysandra_unit = PysandraUnit('path_to_cassandra_schema.yaml[1]')
+    pysandra_unit = PysandraUnit('path_to_cassandra_schema.yaml/cql/xml/json[1]')
 
     pysandra_unit.start() # Starts cassandra server and loads schema
     pysandra_unit.clean() # Cleans data and reload schema
@@ -31,7 +31,7 @@ Check PysandraUnit docs below for more details.
 
 settings.py:
 
-	PYSANDRA_SCHEMA_FILE_PATH = 'path_to_schema.yaml[1]' # optional
+	PYSANDRA_SCHEMA_FILE_PATH = 'path_to_schema[1]' # optional
 	PYSANDRA_TMP_DIR = '/tmp/path' # optional; default is /dev/shm or /tmp
 	PYSANDRA_RPC_PORT = port # optional; default is 9171
 	PYSANDRA_CASSANDRA_YAML_OPTIONS = {} # optional params passed to Cassandra via cassandra.yaml file
@@ -48,7 +48,7 @@ tests.py:
 
 CassandraTestCase will drop data and reload schema for every test case.
 
-[1] Docs for schema yaml: https://github.com/jsevellec/cassandra-unit/wiki/How-to-create-a-yaml-dataset
+[1] Docs for schema files: https://github.com/jsevellec/cassandra-unit/wiki/available-dataset-format
 
 
 ###PysandraUnit docs
@@ -56,31 +56,32 @@ CassandraTestCase will drop data and reload schema for every test case.
 	class PysandraUnit(__builtin__.object)
 		Methods defined here:
 		
-		__init__(self, dataset_path=None, tmp_dir=None, rpc_port=None, cassandra_yaml_options=None)
+		__init__(self, dataset_path=None, tmp_dir=None, rpc_port=None, native_transport_port=None, cassandra_yaml_options=None)
 			Construct a PysandraUnit object. Java server won't be started yet
 			
-			:param dataset_path: path to the dataset file in yaml format. Check cassandra-unit docs for details
+			:param dataset_path: path to the dataset file. Check cassandra-unit docs for details
 			:param tmp_dir: path to the directory where PysandraUnit and Cassandra should create temporary files
 			:param rpc_port: Cassandra rpc port
+			:param native_transport_port: Cassandra native transport port
 			:prama cassandra_yaml_options: dict of additional options passed to Cassandra in cassandra.yaml file
-		
+
 		clean(self)
 			Cleans all Cassandra Keyspaces and reloads data if dataset is provided in constructor
 			If server is not running, 'PysandraUnitServerError' exception will be raised
-		
+
 		get_cassandra_host(self)
 			Returns Cassandra server host and rpc port in format: 'localhost:9710'
-		
+
 		load_data(self, dataset_path=None)
 			Load schema into Cassandra from dataset file
 			If file isn't provided the one from constructior will be used
 			
-			:param dataset_path: path to the dataset file in yaml format. Check cassandra-unit docs for details
-		
+			:param dataset_path: path to the dataset file. Check cassandra-unit docs for details
+
 		start(self)
 			Start Pysandra and Cassandra server, loads dataset file if provided in the constructor
 			If server is already running, 'PysandraUnitServerError' exception will be raised
-		
+
 		stop(self)
 			Stop Pysandra and Cassandra server if running
 

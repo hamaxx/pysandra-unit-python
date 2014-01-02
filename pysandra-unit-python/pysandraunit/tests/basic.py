@@ -10,7 +10,8 @@ _here = lambda x: os.path.join(os.path.dirname(os.path.abspath(__file__)), x)
 class BasicOperationsTest(unittest.TestCase):
 
 	def setUp(self):
-		self.test_schema = _here('test_schema.yaml')
+		self.test_schema_yaml = _here('test_schema.yaml')
+		self.test_schema_cql = _here('test_schema.cql')
 
 	def test_start_clean_stop_no_schema(self):
 		p = PysandraUnit()
@@ -19,7 +20,7 @@ class BasicOperationsTest(unittest.TestCase):
 		p.stop()
 
 	def test_start_clean_connect_stop(self):
-		p = PysandraUnit(self.test_schema)
+		p = PysandraUnit(self.test_schema_yaml)
 		servers = p.start()
 
 		cp = CassandraPool('testks', servers)
@@ -32,7 +33,7 @@ class BasicOperationsTest(unittest.TestCase):
 		port = 9999
 		host = 'localhost:%s' % port
 
-		p = PysandraUnit(self.test_schema, rpc_port=port)
+		p = PysandraUnit(self.test_schema_yaml, rpc_port=port)
 		servers = p.start()
 
 		self.assertEqual(servers[0], host)
@@ -55,3 +56,16 @@ class BasicOperationsTest(unittest.TestCase):
 		p2.start()
 		p2.stop()
 
+	def test_cql_schema(self):
+		port = 9999
+		host = 'localhost:%s' % port
+
+		p = PysandraUnit(self.test_schema_cql, rpc_port=port)
+		servers = p.start()
+
+		self.assertEqual(servers[0], host)
+
+		cp = CassandraPool('testks', [host])
+		cp.cf_connect('ascii')
+
+		p.stop()

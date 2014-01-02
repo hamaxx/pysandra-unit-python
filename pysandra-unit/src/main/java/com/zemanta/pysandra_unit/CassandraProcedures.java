@@ -66,27 +66,27 @@ public class CassandraProcedures {
 		String fileName = (String)val.get("filename");
 		
 		String type = (String)val.get("type");
-		
 		String host = (String)val.get("host");
-		int port = (int)(long)(Long)val.get("port");
+		int rpcPort = (int)(long)(Long)val.get("rpc_port");
+		int nativeTransportPort = (int)(long)(Long)val.get("native_transport_port");
 		
-		if (host == null || fileName == null || type == null) {
+		if (host == null || fileName == null || type == null || rpcPort == 0 || nativeTransportPort == 0) {
 			return new JsonRpcErrorResponse("load_data_error: Missing attribute");
 		}
 		
-		String hostPort = host + ":" + port;
+		String rpcHostPort = host + ":" + rpcPort;
 		
 		try {
 			if (type.equals("yaml")) {
-				new DataLoader("TestCluster", hostPort).load(new FileYamlDataSet(fileName));
+				new DataLoader("TestCluster", rpcHostPort).load(new FileYamlDataSet(fileName));
 			} else if (type.equals("xml")) {
-				new DataLoader("TestCluster", hostPort).load(new FileXmlDataSet(fileName));
+				new DataLoader("TestCluster", rpcHostPort).load(new FileXmlDataSet(fileName));
 			} else if (type.equals("json")) {
-				new DataLoader("TestCluster", hostPort).load(new FileJsonDataSet(fileName));
-			} else if (type.equals("cql3")) {
-				new CQLDataLoader(host, port).load(new FileCQLDataSet(fileName));
+				new DataLoader("TestCluster", rpcHostPort).load(new FileJsonDataSet(fileName));
+			} else if (type.equals("cql")) {
+				new CQLDataLoader(host, nativeTransportPort).load(new FileCQLDataSet(fileName));
 			} else {
-				throw new Exception("Invalid type");
+				return new JsonRpcErrorResponse("load_data_error: Invalid dataset type.");
 			}
 			
 			return new JsonRpcOkResponse();
