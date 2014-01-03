@@ -1,10 +1,3 @@
-"""
-	pysandra-unit
-	~~~~~
-
-	Python wrapper around cassandra-unit that helps you write isolated unittests in Django and other python applications.
-"""
-
 import subprocess
 import os
 import json

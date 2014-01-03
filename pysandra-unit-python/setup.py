@@ -1,6 +1,12 @@
+"""
+	pysandra-unit
+	~~~~~
+
+	Python wrapper around cassandra-unit that helps you write isolated unittests in Django and other python applications.
+"""
+
 from setuptools import setup
 
-import pysandraunit
 
 setup(name='pysandra-unit',
       version='0.3',
@@ -16,7 +22,7 @@ setup(name='pysandra-unit',
       install_requires=[
         'pyyaml',
       ],
-      long_description=pysandraunit.__doc__,
+      long_description=__doc__,
       include_package_data=True,
       platforms='any',
       zip_safe=True)
