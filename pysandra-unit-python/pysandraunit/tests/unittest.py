@@ -5,10 +5,12 @@ from utils import CassandraPool
 
 _here = lambda x: os.path.join(os.path.dirname(os.path.abspath(__file__)), x)
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'pysandraunit.tests.django_settings'
-from ..django import CassandraTestCase, settings
+from pysandraunit.tests import django_settings as settings
+
+from ..unittest import CassandraTestCase
 
 
+CassandraTestCase.set_global_settings(settings)
 
 class BasicOperationsTest(CassandraTestCase):
 
@@ -41,3 +43,4 @@ class BasicOperationsTest(CassandraTestCase):
 
 		cf.insert('test', {'case': 'a'})
 		self.assertEqual(cf.get('test'), {'case': 'a'})
+

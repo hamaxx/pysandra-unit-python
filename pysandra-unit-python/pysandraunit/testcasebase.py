@@ -1,8 +1,5 @@
 from pysandraunit import PysandraUnit
 
-from django.test import TestCase
-from django.conf import settings
-
 _pysandra_single = None
 _cassandra_server_list = None
 
@@ -11,7 +8,7 @@ _cassandra_server_list = None
 class CassandraTestCaseConfigException(Exception):
 	pass
 
-class CassandraTestCase(TestCase):
+class CassandraTestCaseBase(object):
 	"""
 	Django TestCase which starts Cassandra server on the first setUp and reloads data for every test case
 	"""
@@ -19,12 +16,16 @@ class CassandraTestCase(TestCase):
 	def _init_cassandra(self):
 		global _pysandra_single
 
-		schema_path = getattr(settings, 'PYSANDRA_SCHEMA_FILE_PATH', None)
-		tmp_dir = getattr(settings, 'PYSANDRA_TMP_DIR', None)
-		rpc_port = getattr(settings, 'PYSANDRA_RPC_PORT', None)
-		cassandra_yaml_options = getattr(settings, 'PYSANDRA_CASSANDRA_YAML_OPTIONS', None)
+		if not self._settings:
+			_pysandra_single = PysandraUnit()
+		else:
+			schema_path = getattr(self._settings, 'PYSANDRA_SCHEMA_FILE_PATH', None)
+			tmp_dir = getattr(self._settings, 'PYSANDRA_TMP_DIR', None)
+			rpc_port = getattr(self._settings, 'PYSANDRA_RPC_PORT', None)
+			native_transport_port = getattr(self._settings, 'PYSANDRA_NATIVE_TRANSPORT_PORT', None)
+			cassandra_yaml_options = getattr(self._settings, 'PYSANDRA_CASSANDRA_YAML_OPTIONS', None)
 
-		_pysandra_single = PysandraUnit(schema_path, tmp_dir, rpc_port, cassandra_yaml_options)
+			_pysandra_single = PysandraUnit(schema_path, tmp_dir, rpc_port, native_transport_port, cassandra_yaml_options)
 
 		return _pysandra_single.start()
 
@@ -43,12 +44,3 @@ class CassandraTestCase(TestCase):
 
 		_pysandra_single.clean()
 
-	def _pre_setup(self):
-		super(CassandraTestCase, self)._pre_setup()
-
-		self._start_cassandra()
-
-	def _post_teardown(self):
-		super(CassandraTestCase, self)._post_teardown()
-
-		self._clean_cassandra()

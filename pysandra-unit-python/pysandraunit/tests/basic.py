@@ -1,6 +1,6 @@
 import os
 
-import unittest
+from ..unittest import TestCase
 
 import pycassa
 
@@ -9,7 +9,7 @@ from utils import CassandraPool
 
 _here = lambda x: os.path.join(os.path.dirname(os.path.abspath(__file__)), x)
 
-class BasicOperationsTest(unittest.TestCase):
+class BasicOperationsTest(TestCase):
 
 	def setUp(self):
 		self.test_schema_yaml = _here('test_schema.yaml')

@@ -27,18 +27,34 @@ Pysandra Unit is a Python wrapper around [cassandra-unit](https://github.com/jse
 Check PysandraUnit docs below for more details.
 
 
-###Django Test Case:
+###Django TestCase:
 
 settings.py:
 
 	PYSANDRA_SCHEMA_FILE_PATH = 'path_to_schema[1]' # optional
 	PYSANDRA_TMP_DIR = '/tmp/path' # optional; default is /dev/shm or /tmp
 	PYSANDRA_RPC_PORT = port # optional; default is 9171
+	PYSANDRA_NATIVE_TRANSPORT_PORT = port # optional; default is 9142
 	PYSANDRA_CASSANDRA_YAML_OPTIONS = {} # optional params passed to Cassandra via cassandra.yaml file
 
 tests.py:
 
 	from pysandraunit.django import CassandraTestCase
+
+	class SimpleTest(CassandraTestCase):
+
+		def setUp(self):
+			test_cassandra_server_list = self.cassandra_server_list
+			...
+
+###Unittest TestCase:
+
+tests.py:
+
+	from pysandraunit.django import CassandraTestCase
+	import settings
+
+	CassandraTestCase.set_global_settings(settings) # settings module or class, accepts same options as django
 
 	class SimpleTest(CassandraTestCase):
 
