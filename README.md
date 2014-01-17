@@ -14,7 +14,14 @@ Pysandra Unit is a Python wrapper around [cassandra-unit](https://github.com/jse
     python pysandra-unit-python/setup.py install
 
 
-###Run in Python:
+###Docs:
+
+[pysandra-unit docs](docs/_build/text/index.txt)
+
+
+###Examples:
+
+####Run in Python:
 
     from pysandraunit import PysandraUnit
 
@@ -27,7 +34,7 @@ Pysandra Unit is a Python wrapper around [cassandra-unit](https://github.com/jse
 Check PysandraUnit docs below for more details.
 
 
-###Django TestCase:
+####Django TestCase:
 
 settings.py:
 
@@ -47,7 +54,7 @@ tests.py:
 			test_cassandra_server_list = self.cassandra_server_list
 			...
 
-###Unittest TestCase:
+####Unittest TestCase:
 
 tests.py:
 
@@ -65,41 +72,6 @@ tests.py:
 CassandraTestCase will drop data and reload schema for every test case.
 
 [1] Docs for schema files: https://github.com/jsevellec/cassandra-unit/wiki/available-dataset-format
-
-
-###PysandraUnit docs
-
-	class PysandraUnit(__builtin__.object)
-		Methods defined here:
-		
-		__init__(self, dataset_path=None, tmp_dir=None, rpc_port=None, native_transport_port=None, cassandra_yaml_options=None)
-			Construct a PysandraUnit object. Java server won't be started yet
-			
-			:param dataset_path: path to the dataset file. Check cassandra-unit docs for details
-			:param tmp_dir: path to the directory where PysandraUnit and Cassandra should create temporary files
-			:param rpc_port: Cassandra rpc port
-			:param native_transport_port: Cassandra native transport port
-			:prama cassandra_yaml_options: dict of additional options passed to Cassandra in cassandra.yaml file
-
-		clean(self)
-			Cleans all Cassandra Keyspaces and reloads data if dataset is provided in constructor
-			If server is not running, 'PysandraUnitServerError' exception will be raised
-
-		get_cassandra_host(self)
-			Returns Cassandra server host and rpc port in format: 'localhost:9710'
-
-		load_data(self, dataset_path=None)
-			Load schema into Cassandra from dataset file
-			If file isn't provided the one from constructior will be used
-			
-			:param dataset_path: path to the dataset file. Check cassandra-unit docs for details
-
-		start(self)
-			Start Pysandra and Cassandra server, loads dataset file if provided in the constructor
-			If server is already running, 'PysandraUnitServerError' exception will be raised
-
-		stop(self)
-			Stop Pysandra and Cassandra server if running
 
 
 ###Running pysandraunit tests

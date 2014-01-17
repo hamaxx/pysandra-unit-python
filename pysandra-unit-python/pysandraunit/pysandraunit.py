@@ -37,6 +37,15 @@ _CASSANDRA_DIR_OPTIONS = {
 class PysandraUnitServerError(Exception): pass
 
 class PysandraUnit(object):
+	"""
+	Construct a PysandraUnit object. Java server won't be started yet
+
+	:param dataset_path: path to the dataset file. Check cassandra-unit docs for details
+	:param tmp_dir: path to the directory where PysandraUnit and Cassandra should create temporary files
+	:param rpc_port: Cassandra rpc port
+	:param native_transport_port: Cassandra native transport port
+	:param cassandra_yaml_options: dict of additional options passed to Cassandra in cassandra.yaml file
+	"""
 
 	_dataset = None
 	_server = None
@@ -49,16 +58,6 @@ class PysandraUnit(object):
 	native_transport_port = None
 
 	def __init__(self, dataset_path=None, tmp_dir=None, rpc_port=None, native_transport_port=None, cassandra_yaml_options=None):
-		"""
-		Construct a PysandraUnit object. Java server won't be started yet
-
-		:param dataset_path: path to the dataset file. Check cassandra-unit docs for details
-		:param tmp_dir: path to the directory where PysandraUnit and Cassandra should create temporary files
-		:param rpc_port: Cassandra rpc port
-		:param native_transport_port: Cassandra native transport port
-		:prama cassandra_yaml_options: dict of additional options passed to Cassandra in cassandra.yaml file
-		"""
-
 		self._dataset = self._parse_dataset_file_path(dataset_path)
 
 		self.tmp_dir = tmp_dir or self._find_tmp_dir()
