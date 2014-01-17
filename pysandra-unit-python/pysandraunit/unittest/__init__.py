@@ -38,11 +38,16 @@ class CassandraTestCase(TestCase, CassandraTestCaseBase):
 		"""
 		cls._settings = settings
 
-	def setUp(self):
-		self._start_cassandra()
-		super(CassandraTestCase, self).setUp()
+	def __call__(self, result=None):
+		"""Django does this"""
 
-	def tearDown(self):
-		super(CassandraTestCase, self).tearDown()
-		self._clean_cassandra()
+		testMethod = getattr(self, self._testMethodName)
+		skipped = (getattr(self.__class__, "__unittest_skip__", False) or getattr(testMethod, "__unittest_skip__", False))
 
+		if not skipped:
+			self._pre_setup()
+
+		super(CassandraTestCase, self).__call__(result)
+
+		if not skipped:
+			self._post_teardown()

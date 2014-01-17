@@ -18,13 +18,3 @@ class CassandraTestCase(TestCase, CassandraTestCaseBase):
 
 	_settings=settings
 
-	def _pre_setup(self):
-		super(CassandraTestCase, self)._pre_setup()
-
-		self._start_cassandra()
-
-	def _post_teardown(self):
-		super(CassandraTestCase, self)._post_teardown()
-
-		self._clean_cassandra()
-
