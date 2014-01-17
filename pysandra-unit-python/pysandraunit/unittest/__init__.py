@@ -13,7 +13,7 @@ from pysandraunit.testcasebase import CassandraTestCaseBase
 from pysandraunit.testcasebase import CassandraTestCaseConfigException
 
 
-class CassandraTestCase(TestCase, CassandraTestCaseBase):
+class CassandraTestCase(CassandraTestCaseBase, TestCase):
 
 	_settings=None
 

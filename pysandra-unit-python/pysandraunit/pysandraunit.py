@@ -7,8 +7,6 @@ import pkg_resources
 
 __all__ = ['PysandraUnit', 'PysandraUnitServerError']
 
-_here = lambda x: pkg_resources.resource_filename('pysandraunit', x)
-
 _COMMAND_START = 'start'
 _COMMAND_STOP = 'stop'
 _COMMAND_LOAD_DATA = 'load'
@@ -21,8 +19,8 @@ _DEFAULT_NATIVE_TRANSPORT_PORT = 9142
 _TMP_PATHS = ['/dev/shm/', '/tmp/', './']
 _TMP_DIR = 'pysandraunittarget/'
 
-_JAR_PATH = _here('jar/pysandra-unit.jar')
-_DEFAULT_YAML_PATH = _here('resources/cu-cassandra.yaml')
+_JAR_PATH = 'jar/pysandra-unit.jar'
+_CASSANDRA_YAML_PATH = 'resources/cu-cassandra.yaml'
 
 _SUPPORTED_DATASET_FORMATS = ['yaml', 'xml', 'cql', 'json']
 
@@ -63,6 +61,9 @@ class PysandraUnit(object):
 		self.tmp_dir = tmp_dir or self._find_tmp_dir()
 		self._create_tmp_dir()
 
+		pkg_resources.set_extraction_path(self.tmp_dir)
+		self._here = lambda x: pkg_resources.resource_filename('pysandraunit', x)
+
 		self.rpc_port = rpc_port or _DEFAULT_RPC_PORT
 		self.native_transport_port = native_transport_port or _DEFAULT_NATIVE_TRANSPORT_PORT
 
@@ -98,7 +99,7 @@ class PysandraUnit(object):
 		return (path, extension)
 
 	def _get_yaml_file(self, yaml_options):
-		config = yaml.load(open(_DEFAULT_YAML_PATH, 'r'))
+		config = yaml.load(open(self._here(_CASSANDRA_YAML_PATH), 'r'))
 
 		for opt, c_dirs in _CASSANDRA_DIR_OPTIONS.iteritems():
 			if isinstance(c_dirs, list):
@@ -121,7 +122,7 @@ class PysandraUnit(object):
 		return new_yaml_path
 
 	def _run_pysandra(self):
-		self._server = subprocess.Popen(["java", "-jar", _JAR_PATH], stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+		self._server = subprocess.Popen(["java", "-jar", self._here(_JAR_PATH)], stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
 
 	def _get_command_message(self, msg):
 		return '%s\n' % json.dumps(msg)
