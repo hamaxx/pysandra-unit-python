@@ -16,7 +16,7 @@ Pysandra Unit is a Python wrapper around [cassandra-unit](https://github.com/jse
 
 ###Docs:
 
-[pysandra-unit docs](docs/_build/text/index.txt)
+[pysandra-unit docs](pysandra-unit-python/docs/_build/text/index.txt)
 
 
 ###Examples:
