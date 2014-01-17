@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Python unittest CassandraTestCase &mdash; pysandra-unit 0.4 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="pysandra-unit 0.4 documentation" href="../index.html" />
+    <link rel="next" title="Django CassandraTestCase" href="django.html" />
+    <link rel="prev" title="PysandraUnit" href="pysandraunit.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="django.html" title="Django CassandraTestCase"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="pysandraunit.html" title="PysandraUnit"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">pysandra-unit 0.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="toctree-wrapper compound">
+<ul class="simple">
+</ul>
+</div>
+<span class="target" id="module-pysandraunit.unittest"></span><div class="section" id="python-unittest-cassandratestcase">
+<h1>Python unittest CassandraTestCase<a class="headerlink" href="#python-unittest-cassandratestcase" title="Permalink to this headline">¶</a></h1>
+<p>Python unittest TestCase which starts Cassandra server on the first setUp and reloads data for every test case</p>
+</div>
+<dl class="class">
+<dt id="pysandraunit.unittest.CassandraTestCase">
+<em class="property">class </em><tt class="descclassname">pysandraunit.unittest.</tt><tt class="descname">CassandraTestCase</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#pysandraunit.unittest.CassandraTestCase" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="classmethod">
+<dt id="pysandraunit.unittest.CassandraTestCase.set_global_settings">
+<em class="property">classmethod </em><tt class="descname">set_global_settings</tt><big>(</big><em>settings</em><big>)</big><a class="headerlink" href="#pysandraunit.unittest.CassandraTestCase.set_global_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set pysandraunit settings</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>settings</strong> &#8211; module or class with pysandraunit configuration</td>
+</tr>
+</tbody>
+</table>
+<p>Accepted options are:</p>
+<p>PYSANDRA_SCHEMA_FILE_PATH = &#8216;path_to_schema&#8217;</p>
+<p>PYSANDRA_TMP_DIR = &#8216;/tmp/path&#8217;</p>
+<p>PYSANDRA_RPC_PORT = port</p>
+<p>PYSANDRA_NATIVE_TRANSPORT_PORT = port</p>
+<p>PYSANDRA_CASSANDRA_YAML_OPTIONS = {}</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="pysandraunit.unittest.CassandraTestCaseConfigException">
+<em class="property">exception </em><tt class="descclassname">pysandraunit.unittest.</tt><tt class="descname">CassandraTestCaseConfigException</tt><a class="headerlink" href="#pysandraunit.unittest.CassandraTestCaseConfigException" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="pysandraunit.html"
+                        title="previous chapter">PysandraUnit</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="django.html"
+                        title="next chapter">Django CassandraTestCase</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/modules/unittest.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="django.html" title="Django CassandraTestCase"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="pysandraunit.html" title="PysandraUnit"
+             >previous</a> |</li>
+        <li><a href="../index.html">pysandra-unit 0.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Jure Ham.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.
+    </div>
+  </body>
+</html>
