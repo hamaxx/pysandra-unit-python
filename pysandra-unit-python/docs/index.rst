@@ -3,45 +3,24 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to pysandra-unit's documentation!
-=========================================
+Welcome to pysandra-unit |release| documentation!
+=================================================
 
-Contents:
+Write isolated unit/integration tests with Cassandra in Django and other python applications.
 
-.. toctree::
-   :maxdepth: 2
+Pysandra Unit is a Python wrapper around https://github.com/jsevellec/cassandra-unit.
 
-.. automodule:: pysandraunit
-
-.. autoclass:: PysandraUnit
-   :members:
-
-.. autoexception:: PysandraUnitServerError
-
-
-Contents:
+Contents
+--------
 
 .. toctree::
-   :maxdepth: 2
+  :maxdepth: 1
 
-.. automodule:: pysandraunit.django
+  modules/pysandraunit
+  modules/unittest
+  modules/django
 
-.. autoclass:: CassandraTestCase
-   :members:
 
-.. autoexception:: CassandraTestCaseConfigException
-
-Contents:
-
-.. toctree::
-   :maxdepth: 2
-
-.. automodule:: pysandraunit.unittest
-
-.. autoclass:: CassandraTestCase
-   :members:
-
-.. autoexception:: CassandraTestCaseConfigException
 
 
 Indices and tables

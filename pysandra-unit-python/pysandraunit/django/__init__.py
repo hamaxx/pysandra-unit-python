@@ -1,3 +1,10 @@
+"""
+	Django CassandraTestCase
+	~~~~~~~~~~~~~~~~~~~~~~~~
+
+	Django TestCase which starts Cassandra server on the first setUp and reloads data for every test case
+"""
+
 __all__ = ['CassandraTestCase', 'CassandraTestCaseConfigException']
 
 from django.test import TestCase
@@ -8,9 +15,6 @@ from pysandraunit.testcasebase import CassandraTestCaseConfigException
 
 
 class CassandraTestCase(TestCase, CassandraTestCaseBase):
-	"""
-	Django TestCase which starts Cassandra server on the first setUp and reloads data for every test case
-	"""
 
 	_settings=settings
 
