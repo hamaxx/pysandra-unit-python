@@ -71,8 +71,10 @@ class PysandraUnit(object):
 
 	def _create_tmp_dir(self):
 		if os.path.exists(self.tmp_dir):
+			if not os.access(self.tmp_dir, os.W_OK):
+				raise PysandraUnitServerError('Directory %s exists but is not writable by the current user' % self.tmp_dir)
 			shutil.rmtree(self.tmp_dir)
-		os.makedirs(self.tmp_dir, 0o777)
+		os.makedirs(self.tmp_dir, 0o755)
 
 	def _find_tmp_dir(self):
 		for path in _TMP_PATHS:
