@@ -16,6 +16,16 @@ from pysandraunit.testcasebase import CassandraTestCaseConfigException
 
 class CassandraTestCase(CassandraTestCaseBase, TestCase):
 
-	_settings=settings
-	cassandra_server_list = None
+	def _pre_setup(self):
+		if hasattr(super(CassandraTestCaseBase, self), '_pre_setup'):
+			super(CassandraTestCaseBase, self)._pre_setup()
 
+		self._start_cassandra()
+
+	def _post_teardown(self):
+		if hasattr(super(CassandraTestCaseBase, self), '_post_teardown'):
+			super(CassandraTestCaseBase, self)._post_teardown()
+
+		self._clean_cassandra()
+
+CassandraTestCase.set_global_settings(settings)
