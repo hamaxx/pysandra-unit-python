@@ -31,6 +31,26 @@ _CASSANDRA_DIR_OPTIONS = {
     'data_file_directories': ['embeddedCassandra/data'],
 }
 
+_JVM_SWITCHES = [
+    '-XX:+CMSClassUnloadingEnabled',
+    '-XX:+UseThreadPriorities',
+    '-XX:ThreadPriorityPolicy=42',
+    '-Xms2048M',
+    '-Xmx2048M',
+    '-Xmn200M',
+    '-XX:+HeapDumpOnOutOfMemoryError',
+    '-Xss256k',
+    '-XX:StringTableSize=1000003',
+    '-XX:+UseParNewGC',
+    '-XX:+UseConcMarkSweepGC',
+    '-XX:+CMSParallelRemarkEnabled',
+    '-XX:SurvivorRatio=8',
+    '-XX:MaxTenuringThreshold=1',
+    '-XX:CMSInitiatingOccupancyFraction=75',
+    '-XX:+UseCMSInitiatingOccupancyOnly',
+    '-XX:+UseTLAB',
+]
+
 
 class PysandraUnitServerError(Exception):
     pass
@@ -126,7 +146,13 @@ class PysandraUnit(object):
         return new_yaml_path
 
     def _run_pysandra(self):
-        self._server = subprocess.Popen(["java", "-jar", self._here(_JAR_PATH)], stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+        command = ["java", "-jar", self._here(_JAR_PATH)] + _JVM_SWITCHES
+        self._server = subprocess.Popen(
+            command,
+            stdout=subprocess.PIPE,
+            stdin=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        )
 
     def _get_command_message(self, msg):
         return '%s\n' % json.dumps(msg)
