@@ -10,7 +10,7 @@ from setuptools import setup
 
 setup(
     name='pysandra-unit',
-    version='0.4.2',
+    version='0.4.2.1',
     author='Jure Ham',
     license='GPLv3',
     author_email='jure.ham@zemanta.com',
