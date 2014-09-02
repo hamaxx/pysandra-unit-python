@@ -14,33 +14,33 @@ CassandraTestCase.set_global_settings(settings)
 
 class BasicOperationsTest(CassandraTestCase):
 
-	@classmethod
-	def setUpClass(cls):
-		settings.PYSANDRA_SCHEMA_FILE_PATH = _here('test_schema.yaml')
+    @classmethod
+    def setUpClass(cls):
+        settings.PYSANDRA_SCHEMA_FILE_PATH = _here('test_schema.yaml')
 
-	@classmethod
-	def tearDownClass(cls):
-		settings.PYSANDRA_SCHEMA_FILE_PATH = None
+    @classmethod
+    def tearDownClass(cls):
+        settings.PYSANDRA_SCHEMA_FILE_PATH = None
 
-	def test_connect_clean_1(self):
-		self.assertEqual(self.cassandra_server_list, ['localhost:9171'])
+    def test_connect_clean_1(self):
+        self.assertEqual(self.cassandra_server_list, ['localhost:9171'])
 
-		cp = CassandraPool('testks', self.cassandra_server_list)
-		cf = cp.cf_connect('ascii')
+        cp = CassandraPool('testks', self.cassandra_server_list)
+        cf = cp.cf_connect('ascii')
 
-		self.assertRaises(pycassa.NotFoundException, cf.get, 'test')
+        self.assertRaises(pycassa.NotFoundException, cf.get, 'test')
 
-		cf.insert('test', {'case': 'a'})
-		self.assertEqual(cf.get('test'), {'case': 'a'})
+        cf.insert('test', {'case': 'a'})
+        self.assertEqual(cf.get('test'), {'case': 'a'})
 
-	def test_connect_clean_2(self):
-		self.assertEqual(self.cassandra_server_list, ['localhost:9171'])
+    def test_connect_clean_2(self):
+        self.assertEqual(self.cassandra_server_list, ['localhost:9171'])
 
-		cp = CassandraPool('testks', self.cassandra_server_list)
-		cf = cp.cf_connect('ascii')
+        cp = CassandraPool('testks', self.cassandra_server_list)
+        cf = cp.cf_connect('ascii')
 
-		self.assertRaises(pycassa.NotFoundException, cf.get, 'test')
+        self.assertRaises(pycassa.NotFoundException, cf.get, 'test')
 
-		cf.insert('test', {'case': 'a'})
-		self.assertEqual(cf.get('test'), {'case': 'a'})
+        cf.insert('test', {'case': 'a'})
+        self.assertEqual(cf.get('test'), {'case': 'a'})
 
