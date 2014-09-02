@@ -35,8 +35,9 @@ _JVM_SWITCHES = [
     '-XX:+CMSClassUnloadingEnabled',
     '-XX:+UseThreadPriorities',
     '-XX:ThreadPriorityPolicy=42',
-    '-Xms512M',
-    '-Xmx512M',
+    '-Xms2048M',
+    '-Xmx2048M',
+    '-Xmn200M',
     '-XX:+HeapDumpOnOutOfMemoryError',
     '-Xss256k',
     '-XX:StringTableSize=1000003',
@@ -145,7 +146,7 @@ class PysandraUnit(object):
         return new_yaml_path
 
     def _run_pysandra(self):
-        command = ["java", "-jar", self._here(_JAR_PATH)] + _JVM_SWITCHES
+        command = ["java"] + _JVM_SWITCHES + ["-jar", self._here(_JAR_PATH)]
         self._server = subprocess.Popen(
             command,
             stdout=subprocess.PIPE,
