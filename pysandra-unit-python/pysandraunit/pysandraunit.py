@@ -35,7 +35,7 @@ _JVM_SWITCHES = [
     '-XX:+CMSClassUnloadingEnabled',
     '-XX:+UseThreadPriorities',
     '-XX:ThreadPriorityPolicy=42',
-    '-Xms2048M',
+    '-Xms256M',
     '-Xmx2048M',
     '-Xmn200M',
     '-XX:+HeapDumpOnOutOfMemoryError',
