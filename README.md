@@ -1,11 +1,13 @@
-##Pysandra Unit
+Pysandra Unit
+=============
 
 Write isolated unit/integration tests with Cassandra in Django and other python applications.
 
 Pysandra Unit is a Python wrapper around [cassandra-unit](https://github.com/jsevellec/cassandra-unit).
 
 
-###Install:
+Install:
+--------
 
     pip install pysandra-unit
 
@@ -14,7 +16,8 @@ Pysandra Unit is a Python wrapper around [cassandra-unit](https://github.com/jse
     python pysandra-unit-python/setup.py install
 
 
-###Docs:
+Docs:
+-----
 
 [pysandra-unit docs](http://pythonhosted.org/pysandra-unit/)
 
@@ -24,14 +27,16 @@ Pysandra Unit is a Python wrapper around [cassandra-unit](https://github.com/jse
 
 
 
-###Running pysandraunit tests
+Running pysandraunit tests
+--------------------------
 
 	pip install -r pysandraunit/tests/requirements.txt
 
 	./run_tests.sh
 
 
-###Build pysandra-unit jar:
+Build pysandra-unit jar:
+------------------------
 
 pysandra-unit is a Maven project.
 
